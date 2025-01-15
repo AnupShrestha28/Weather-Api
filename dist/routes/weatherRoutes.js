@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const weatherController_1 = require("../controllers/weatherController");
+const router = (0, express_1.Router)();
+const weatherController = new weatherController_1.WeatherController();
+router.get("/realtime", weatherController.getRealtimeWeather.bind(weatherController));
+router.get("/forecast", weatherController.getForecast.bind(weatherController));
+router.get("/airquality", weatherController.getAirQuality.bind(weatherController));
+router.post("/generate", weatherController.generateMockData.bind(weatherController));
+router.get("/locations", weatherController.getLocations.bind(weatherController));
+exports.default = router;

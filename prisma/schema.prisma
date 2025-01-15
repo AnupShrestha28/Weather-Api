@@ -1,0 +1,51 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Location {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique @db.VarChar(255)  
+  latitude  Decimal?  @db.Decimal(10, 6)
+  longitude Decimal?  @db.Decimal(10, 6)
+  weatherRealTime WeatherRealTime[]
+  weatherForecast WeatherForecast[]
+  airQuality AirQuality[]
+}
+
+
+model WeatherRealTime {
+  id          Int       @id @default(autoincrement())
+  locationId  Int
+  temperature Decimal   @db.Decimal(5, 2)
+  condition   String    @db.VarChar(255)
+  humidity    Int
+  windSpeed   Decimal   @db.Decimal(5, 2)
+  updatedAt   DateTime  @default(now())
+
+  location    Location  @relation(fields: [locationId], references: [id])
+}
+
+model WeatherForecast {
+  id         Int      @id @default(autoincrement())
+  locationId Int
+  date       DateTime
+  minTemp    Decimal  @db.Decimal(5, 2)
+  maxTemp    Decimal  @db.Decimal(5, 2)
+  condition  String   @db.VarChar(255)
+
+  location   Location @relation(fields: [locationId], references: [id])
+}
+
+model AirQuality {
+  id         Int      @id @default(autoincrement())
+  locationId Int
+  aqi        Int
+  description String  @db.VarChar(255)
+
+  location   Location @relation(fields: [locationId], references: [id])
+}
